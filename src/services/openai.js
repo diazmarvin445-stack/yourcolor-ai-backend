@@ -1,12 +1,21 @@
 const OpenAI = require('openai');
 const config = require('../config/env');
 
-const openai = new OpenAI({
-  apiKey: config.openaiApiKey
-});
+let openai = null;
+
+function getClient() {
+  if (!openai) {
+    if (!config.openaiApiKey) {
+      throw new Error('OPENAI_API_KEY is not configured');
+    }
+    openai = new OpenAI({ apiKey: config.openaiApiKey });
+  }
+  return openai;
+}
 
 async function generateImage(prompt) {
-  const response = await openai.images.generate({
+  const client = getClient();
+  const response = await client.images.generate({
     model: 'dall-e-3',
     prompt: prompt,
     n: 1,

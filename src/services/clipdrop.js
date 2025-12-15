@@ -3,6 +3,9 @@ const FormData = require('form-data');
 const config = require('../config/env');
 
 async function removeBackground(imageBase64) {
+  if (!config.clipdropApiKey) {
+    throw new Error('CLIPDROP_API_KEY is not configured');
+  }
   const imageBuffer = Buffer.from(imageBase64, 'base64');
 
   const form = new FormData();
