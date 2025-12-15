@@ -4,8 +4,7 @@ const requiredEnvVars = ['OPENAI_API_KEY', 'CLIPDROP_API_KEY'];
 
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
-    console.error(`Error: ${envVar} is required`);
-    process.exit(1);
+    console.warn(`Warning: ${envVar} is not set. API calls will fail until configured.`);
   }
 }
 
