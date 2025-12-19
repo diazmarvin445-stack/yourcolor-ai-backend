@@ -8,7 +8,17 @@
       "Bash(git commit:*)",
       "Bash(git rm:*)",
       "Bash(git remote add:*)",
-      "Bash(GIT_SSH_COMMAND=\"ssh -i ~/.ssh/aurora\" git push:*)"
+      "Bash(GIT_SSH_COMMAND=\"ssh -i ~/.ssh/aurora\" git push:*)",
+      "Bash(curl:*)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(powershell -Command \"(Get-Content es.json -Raw) -replace ''\"\"ai_generator\"\": \\{'', ''\"\"ai_generator\"\": {\\n      \"\"title\"\": \"\"Crea tu diseño con IA\"\",'' | Set-Content es.json -NoNewline\")",
+      "Bash(powershell -Command \"(Get-Content en.default.json -Raw) -replace ''\"\"ai_generator\"\": \\{'', ''\"\"ai_generator\"\": {\\n      \"\"title\"\": \"\"Create your design with AI\"\",'' | Set-Content en.default.json -NoNewline\")",
+      "Bash(powershell -Command \"Get-Content es.json | Select-String ''ai_generator'' -Context 0,5\")",
+      "Bash(git checkout:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(python:*)",
+      "Bash(node:*)"
     ]
   }
 }

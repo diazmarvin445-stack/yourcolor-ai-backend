@@ -1,71 +1,157 @@
-# YourColor AI Backend
+# YourColor AI
 
-Backend para generación de imágenes con DALL-E 3 y remoción de fondo con Clipdrop.
+Sistema de generacion de imagenes con IA para personalizacion de productos en Shopify.
 
-## Setup Local
+## Descripcion
+
+YourColor AI permite a los clientes de una tienda Shopify crear disenos personalizados usando inteligencia artificial (DALL-E 3) y previsualizarlos directamente sobre los productos antes de comprar.
+
+### Caracteristicas
+
+- Generacion de imagenes con DALL-E 3
+- Remocion automatica de fondo (ClipDrop API)
+- Previsualizacion en tiempo real sobre el producto
+- Controles de posicion y zoom
+- Descarga de diseno en alta resolucion (4500x5400px @ 300 DPI)
+- Soporte multiidioma (ES/EN)
+- Responsive (movil y desktop)
+
+## Arquitectura
+
+```
++---------------------+     +---------------------+
+|   Shopify Store     |---->|   Backend API       |
+|   (Frontend)        |<----|   (Node.js)         |
++---------------------+     +---------------------+
+                                     |
+                            +--------+--------+
+                            v                 v
+                    +---------------+  +---------------+
+                    |   OpenAI      |  |   ClipDrop    |
+                    |   DALL-E 3    |  |   (Bg Remove) |
+                    +---------------+  +---------------+
+```
+
+## Requisitos
+
+- Node.js 18+
+- Cuenta OpenAI con acceso a DALL-E 3
+- Cuenta ClipDrop (para remocion de fondo)
+- Tienda Shopify con tema compatible
+
+## Instalacion
+
+### Backend
 
 ```bash
+# Clonar repositorio
+git clone <repo-url>
+cd yourcolor-ai
+
+# Instalar dependencias
 npm install
+
+# Configurar variables de entorno
 cp .env.example .env
 # Editar .env con tus API keys
-npm run dev
+
+# Iniciar servidor
+npm start
 ```
+
+### Shopify
+
+1. Copiar archivos de `shopify/` a tu tema:
+   - `assets/ai-generator.js`
+   - `assets/ai-generator.css`
+   - `snippets/ai-image-generator.liquid`
+
+2. Agregar traducciones a `locales/es.json` y `locales/en.default.json`
+
+3. En el Theme Editor, agregar el bloque "AI Image Generator" a la seccion de producto
 
 ## Variables de Entorno
 
-| Variable | Descripción |
-|----------|-------------|
-| PORT | Puerto del servidor (default: 3000) |
-| OPENAI_API_KEY | API key de OpenAI |
-| CLIPDROP_API_KEY | API key de Clipdrop |
-| ALLOWED_ORIGINS | Dominios permitidos para CORS (separados por coma) |
+```env
+# API Keys (requeridas)
+OPENAI_API_KEY=sk-...
+CLIPDROP_API_KEY=...
 
-## Endpoints
+# Servidor
+PORT=3000
 
-### POST /api/generate-image
+# CORS - dominios permitidos (separados por coma)
+ALLOWED_ORIGINS=https://tu-tienda.myshopify.com,https://tu-dominio.com
+```
 
-Genera una imagen basada en un prompt.
+## Estructura del Proyecto
 
-**Request:**
-```json
+```
+yourcolor-ai/
+├── src/
+│   ├── index.js              # Servidor Express
+│   ├── config/
+│   │   └── env.js            # Configuracion de entorno
+│   ├── routes/
+│   │   └── generate.js       # Endpoint de generacion
+│   ├── services/
+│   │   ├── openai.js         # Integracion DALL-E 3
+│   │   └── clipdrop.js       # Integracion remocion fondo
+│   └── middleware/
+│       └── errorHandler.js   # Manejo de errores
+├── shopify/
+│   ├── assets/
+│   │   ├── ai-generator.js   # Modulo frontend
+│   │   └── ai-generator.css  # Estilos
+│   ├── snippets/
+│   │   └── ai-image-generator.liquid
+│   └── locales/              # Traducciones
+├── docs/                     # Documentacion
+├── .env.example
+├── package.json
+└── README.md
+```
+
+## API Endpoints
+
+### Health Check
+```
+GET /api/health
+```
+
+### Generar Imagen
+```
+POST /api/generate-image
+Content-Type: application/json
+
 {
-  "prompt": "un dragon de fuego estilo anime",
-  "withBackground": true
+  "prompt": "descripcion del diseno",
+  "withBackground": true|false
 }
 ```
 
-**Response:**
-```json
-{
-  "success": true,
-  "imageUrl": "data:image/png;base64,...",
-  "prompt": "un dragon de fuego estilo anime",
-  "withBackground": true
-}
-```
+Ver [docs/API.md](docs/API.md) para documentacion completa.
 
-### GET /api/health
+## Documentacion
 
-Health check del servidor.
+- [Guia para el Cliente](docs/GUIA-CLIENTE.md) - Como usar el modulo en Shopify
+- [Documentacion API](docs/API.md) - Referencia tecnica del endpoint
+- [Guia de Mantenimiento](docs/MANTENIMIENTO.md) - Actualizacion y configuracion
 
-**Response:**
-```json
-{
-  "status": "ok",
-  "timestamp": "2024-01-01T00:00:00.000Z"
-}
-```
+## Despliegue
 
-## Deploy en Railway
+El backend puede desplegarse en:
+- Railway
+- Render
+- Heroku
+- VPS con PM2
 
-1. Conectar repositorio de GitHub
-2. Agregar variables de entorno en Railway
-3. Deploy automático
+Asegurate de configurar las variables de entorno en tu plataforma de hosting.
 
-## Deploy en Render
+## Licencia
 
-1. Crear nuevo Web Service
-2. Conectar repositorio
-3. Build Command: `npm install`
-4. Start Command: `npm start`
-5. Agregar variables de entorno
+Propiedad de YourColor Corp. Todos los derechos reservados.
+
+---
+
+Desarrollado por [Victor Alejo](https://victalejo.dev)
