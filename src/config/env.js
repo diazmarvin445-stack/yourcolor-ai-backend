@@ -8,11 +8,17 @@ for (const envVar of requiredEnvVars) {
   }
 }
 
+// Default production origins
+const defaultOrigins = [
+  'https://yourcolor.com.im',
+  'http://localhost:3000'
+];
+
 module.exports = {
   port: process.env.PORT || 3000,
   openaiApiKey: process.env.OPENAI_API_KEY,
   clipdropApiKey: process.env.CLIPDROP_API_KEY,
   allowedOrigins: process.env.ALLOWED_ORIGINS
-    ? process.env.ALLOWED_ORIGINS.split(',')
-    : ['http://localhost:3000']
+    ? process.env.ALLOWED_ORIGINS.split(',').concat(defaultOrigins)
+    : defaultOrigins
 };
