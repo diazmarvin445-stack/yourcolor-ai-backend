@@ -27,7 +27,8 @@ function errorHandler(err, req, res, next) {
   // Default error
   res.status(500).json({
     success: false,
-    error: 'Error interno del servidor. Intenta de nuevo.'
+    error: 'Error interno del servidor. Intenta de nuevo.',
+    debug: err.message || 'Unknown error'
   });
 }
 
