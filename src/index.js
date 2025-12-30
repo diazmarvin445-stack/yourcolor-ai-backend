@@ -4,9 +4,15 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const config = require('./config/env');
 const generateRoutes = require('./routes/generate');
+const quotaRoutes = require('./routes/quota');
+const webhookRoutes = require('./routes/webhook');
 const errorHandler = require('./middleware/errorHandler');
+const { initDatabase } = require('./services/usageQuota');
 
 const app = express();
+
+// Inicializar base de datos
+initDatabase();
 
 // Logging
 app.use(morgan('combined'));
@@ -46,6 +52,15 @@ app.get('/api/health', (req, res) => {
 
 // Routes
 app.use('/api', generateRoutes);
+app.use('/api', quotaRoutes);
+
+// Webhook con raw body para verificacion HMAC
+app.use('/api/webhook', express.raw({ type: 'application/json' }), (req, res, next) => {
+  // Guardar raw body para verificacion de firma
+  req.rawBody = req.body.toString('utf8');
+  req.body = JSON.parse(req.rawBody);
+  next();
+}, webhookRoutes);
 
 // Error handler
 app.use(errorHandler);

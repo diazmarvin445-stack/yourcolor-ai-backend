@@ -18,6 +18,8 @@ module.exports = {
   port: process.env.PORT || 3000,
   openaiApiKey: process.env.OPENAI_API_KEY,
   clipdropApiKey: process.env.CLIPDROP_API_KEY,
+  shopifyWebhookSecret: process.env.SHOPIFY_WEBHOOK_SECRET,
+  databasePath: process.env.DATABASE_PATH,
   allowedOrigins: process.env.ALLOWED_ORIGINS
     ? process.env.ALLOWED_ORIGINS.split(',').concat(defaultOrigins)
     : defaultOrigins
